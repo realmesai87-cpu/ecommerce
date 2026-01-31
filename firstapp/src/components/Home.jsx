@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -18,17 +19,28 @@ export default function Home() {
       alert("Login first to access the products")
       return false
     }
-    axios.post("http://localhost:4000/api/cart/add",
+    axios.post("https://ecom-al7s.onrender.com/api/cart/add",
       {productId, quantity:1}, 
       {params:{userId}
     })
       .then(res=>{
         if(res.status==200){
           alert("Product added successfully to cart")
+          Swal.fire({
+  title: "Good job!",
+  text: "You clicked the button!",
+  icon: "success"
+});
           navigate("/cart")
         }
         else{
           alert(res.data.message)
+          Swal.fire({
+  icon: "error",
+  title: "Oops...",
+  text: "Something went wrong!",
+  footer: '<a href="#">Why do I have this issue?</a>'
+});
         }
       })
       .catch(err=>{
@@ -37,7 +49,7 @@ export default function Home() {
   }
 
   async function fetchProducts() {
-    axios.get("http://localhost:4000/api/product")
+    axios.get("https://ecom-al7s.onrender.com/api/product")
       .then((res) => {
         console.log(res.data)
         if (res.status == 200) {
